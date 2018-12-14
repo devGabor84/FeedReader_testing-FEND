@@ -64,22 +64,25 @@ $(
         const menuBtn = document.querySelector(".menu-icon-link");
 
         menuBtn.click();
-        expect(body.classList.toggle("menu-hidden")).toBe(true);
+        expect(body.classList.contains("menu-hidden")).toBe(false);
+
+        menuBtn.click();
+        expect(body.classList.contains("menu-hidden")).toBe(true);
       });
     });
 
     /* Test suite named "Initial Entries" */
 
     describe("Initial Entries", function() {
+      /* Test that ensures when the loadFeed
+       * function is called and completes its work, there is at least
+       * a single .entry element within the .feed container.*/
+
       beforeEach(function(done) {
         loadFeed(0, function() {
           done();
         });
       });
-
-      /* Test that ensures when the loadFeed
-       * function is called and completes its work, there is at least
-       * a single .entry element within the .feed container.*/
 
       it("there should be at least a single .entry element in the .feed container", function(done) {
         const entries = document.querySelectorAll(".entry");
@@ -88,11 +91,35 @@ $(
       });
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
+    /* Test suite named "New Feed Selection" */
 
-    /* TODO: Write a test that ensures when a new feed is loaded
-     * by the loadFeed function that the content actually changes.
-     * Remember, loadFeed() is asynchronous.
-     */
+    describe("New Feed Selection", function() {
+      /* Test that ensures when a new feed is loaded
+       * by the loadFeed function that the content actually changes.*/
+
+      const firstFeedEntries = [];
+
+      beforeEach(function(done) {
+        loadFeed(0);
+        const entries = document.querySelectorAll(".entry");
+        for (entry of entries) {
+          firstFeedEntries.push(entry.innerHTML);
+        }
+        loadFeed(1, function() {
+          done();
+        });
+      });
+
+      it("when a new feed is loaded the content actually changes ", function(done) {
+        const secondFeedEntries = document.querySelectorAll(".entry");
+        for (let index = 0; index <= firstFeedEntries.length; index++) {
+          expect(secondFeedEntries[index] === firstFeedEntries[index]).toBe(
+            false
+          );
+        }
+
+        done();
+      });
+    });
   })()
 );
