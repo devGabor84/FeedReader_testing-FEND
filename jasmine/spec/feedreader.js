@@ -85,7 +85,7 @@ $(
       });
 
       it("there should be at least a single .entry element in the .feed container", function(done) {
-        const entries = document.querySelectorAll(".entry");
+        const entries = document.querySelectorAll(".feed .entry");
         expect(entries.length).not.toBe(0);
         done();
       });
@@ -97,27 +97,31 @@ $(
       /* Test that ensures when a new feed is loaded
        * by the loadFeed function that the content actually changes.*/
 
-      const firstFeedEntries = [];
+      let firstFeedEntries = [];
+      let secondFeedEntries = [];
 
       beforeEach(function(done) {
-        loadFeed(0);
-        const entries = document.querySelectorAll(".entry");
-        for (entry of entries) {
-          firstFeedEntries.push(entry.innerHTML);
-        }
-        loadFeed(1, function() {
+        loadFeed(0, function() {
+          const entriesOne = document.querySelectorAll(".feed .entry");
+          for (let entryFirstFeed of entriesOne) {
+            firstFeedEntries.push(entryFirstFeed.innerText);
+          }
+        });
+        loadFeed(2, function() {
+          const entriesTwo = document.querySelectorAll(".feed .entry");
+          for (let entrySecondFeed of entriesTwo) {
+            secondFeedEntries.push(entrySecondFeed.innerText);
+          }
           done();
         });
       });
 
       it("when a new feed is loaded the content actually changes ", function(done) {
-        const secondFeedEntries = document.querySelectorAll(".entry");
         for (let index = 0; index <= firstFeedEntries.length; index++) {
           expect(secondFeedEntries[index] === firstFeedEntries[index]).toBe(
             false
           );
         }
-
         done();
       });
     });
