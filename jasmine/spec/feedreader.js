@@ -106,22 +106,21 @@ $(
           for (let entryFirstFeed of entriesOne) {
             firstFeedEntries.push(entryFirstFeed.innerText);
           }
-        });
-        loadFeed(2, function() {
-          const entriesTwo = document.querySelectorAll(".feed .entry");
-          for (let entrySecondFeed of entriesTwo) {
-            secondFeedEntries.push(entrySecondFeed.innerText);
-          }
-          done();
+          loadFeed(2, function() {
+            const entriesTwo = document.querySelectorAll(".feed .entry");
+            for (let entrySecondFeed of entriesTwo) {
+              secondFeedEntries.push(entrySecondFeed.innerText);
+            }
+            done();
+          });
         });
       });
 
       it("when a new feed is loaded the content actually changes ", function(done) {
-        for (let index = 0; index <= firstFeedEntries.length; index++) {
-          expect(secondFeedEntries[index] === firstFeedEntries[index]).toBe(
-            false
-          );
-        }
+        firstFeedEntries.forEach(function(entries, index) {
+          expect(entries === secondFeedEntries[index]).toBe(false);
+        });
+
         done();
       });
     });
